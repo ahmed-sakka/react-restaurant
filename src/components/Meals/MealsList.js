@@ -1,13 +1,23 @@
+import Card from '../UI/Card';
 import { MOCK_MEALS } from '../../data/mockMeals';
 import classes from './MealsList.module.css';
+import MealItem from './MealItem/MealItem';
 
 const MealsList = () => {
   const mealsList = MOCK_MEALS.map((meal) => (
-    <li key={meal.id}>{meal.name}</li>
+    <MealItem
+      key={meal.id}
+      name={meal.name}
+      description={meal.description}
+      price={meal.price}
+    />
   ));
+
   return (
     <section className={classes.meals}>
-      <ul>{mealsList}</ul>
+      <Card>
+        <ul>{mealsList}</ul>
+      </Card>
     </section>
   );
 };
