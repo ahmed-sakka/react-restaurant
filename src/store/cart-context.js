@@ -14,14 +14,14 @@ const CartContext = React.createContext({
 const cartReducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'ADD_ITEM':
+    case 'ADD_ITEM': {
       const updatedTotalAmount =
         state.totalAmount + payload.price * payload.amount;
       // find item's index in cart if exists
       const itemCartIndex = state.items.findIndex(
         (item) => item.id === payload.id
       );
-      // ged item from cart if exists
+      // get item from cart if exists
       const cartItem = state.items[itemCartIndex];
       let updatedItems;
       // if the item already exists in the cart
@@ -39,12 +39,41 @@ const cartReducer = (state, action) => {
         // so the old state will not be altered
         updatedItems = state.items.concat(payload);
       }
-
       return {
         items: updatedItems,
         totalAmount: updatedTotalAmount,
       };
+    }
     case 'REMOVE_ITEM':
+      // find item's index in cart if exists
+      const itemCartIndex = state.items.findIndex(
+        (item) => item.id === payload
+      );
+      // get item from cart if exists
+      const cartItem = state.items[itemCartIndex];
+      // update total
+      const updatedTotalAmount = state.totalAmount - cartItem.price;
+      let updatedItems;
+      // if the item already exists in the cart
+      if (cartItem) {
+        // if item amount is 1 remove item from cart
+        if (cartItem.amount === 1) {
+          updatedItems = state.items.filter((item) => item.id !== payload);
+        } else {
+          // copy old cart items
+          updatedItems = [...state.items];
+          const updatedItem = {
+            ...cartItem,
+            amount: cartItem.amount - 1,
+          };
+          // overwrite item
+          updatedItems[itemCartIndex] = updatedItem;
+        }
+      }
+      return {
+        items: updatedItems,
+        totalAmount: updatedTotalAmount,
+      };
     default:
       return initialState;
   }
