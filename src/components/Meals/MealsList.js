@@ -1,5 +1,5 @@
 import Card from '../UI/Card';
-import { MOCK_MEALS } from '../../data/mockMeals';
+import { MOCK_MEALS } from '../../data/mock-meals';
 import classes from './MealsList.module.css';
 import MealItem from './MealItem/MealItem';
 
