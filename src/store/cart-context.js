@@ -15,11 +15,31 @@ const cartReducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
     case 'ADD_ITEM':
-      // unlike `push`, `concat` returns a new array
-      // so the old state will not be altered
-      const updatedItems = state.items.concat(payload);
       const updatedTotalAmount =
         state.totalAmount + payload.price * payload.amount;
+      // find item's index in cart if exists
+      const itemCartIndex = state.items.findIndex(
+        (item) => item.id === payload.id
+      );
+      // ged item from cart if exists
+      const cartItem = state.items[itemCartIndex];
+      let updatedItems;
+      // if the item already exists in the cart
+      if (cartItem) {
+        const updatedItem = {
+          ...cartItem,
+          amount: cartItem.amount + payload.amount,
+        };
+        // copy old cart items
+        updatedItems = [...state.items];
+        // overwrite item
+        updatedItems[itemCartIndex] = updatedItem;
+      } else {
+        // unlike `push`, `concat` returns a new array
+        // so the old state will not be altered
+        updatedItems = state.items.concat(payload);
+      }
+
       return {
         items: updatedItems,
         totalAmount: updatedTotalAmount,
